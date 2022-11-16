@@ -54,6 +54,4 @@ jobs:
         with:
           push: ${{ github.event_name != 'pull_request' }}
           file: ./8.1/Dockerfile
-          tags: |
-            ${{ steps.meta.outputs.tags }}
-            8.1
+          tags: ${{ steps.meta.outputs.tags }}
