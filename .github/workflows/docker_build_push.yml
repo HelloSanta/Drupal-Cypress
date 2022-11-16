@@ -17,9 +17,9 @@ jobs:
         with:
           context: .
           file: 8.1/Dockerfile
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_PASSWORD }}
-          repository: ${{ secrets.DOCKERHUB_REPOSITORY }}
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWD }}
+          repository: ${{ secrets.DOCKER_REPOSITORY }}
           tag_with_ref: true
           tag_with_sha: true
           tags: latest
