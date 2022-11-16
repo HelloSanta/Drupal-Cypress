@@ -13,7 +13,6 @@ jobs:
   # Build and push the Docker image
   push_to_registry:
     name: Build and push Docker image to Docker Hub
-    if: github.event_name == 'release'
     runs-on: ubuntu-latest
     steps:
       -
