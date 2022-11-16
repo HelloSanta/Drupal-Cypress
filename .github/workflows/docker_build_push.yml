@@ -58,4 +58,4 @@ jobs:
         with:
           push: ${{ github.event_name != 'pull_request' }}
           file: ./8.0/Dockerfile
-          tags: 8.0
+          tags: hellosanta/drupal-cypress:8.0
