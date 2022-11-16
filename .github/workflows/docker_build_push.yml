@@ -2,15 +2,10 @@ name: Build drupal and cypress image and push it to docker hub
 
 on:
   push:
-    # Match all branches *without* a / in the name.
-    # This will exclude "sub" branches, such as "feature branches",
-    # named something like: "feature/my-feature". Those branches will
-    # likely contain "work in progress" code, so we will run the tests
-    # on the local machine and avoid using up GitHub Actions credits
-    # (if applicable, such as in `private` repositories).
-    # Filter syntax info: https://docs.github.com/en/free-pro-team@latest/actions/reference/workflow-syntax-for-github-actions#filter-pattern-cheat-sheet
     branches:
-      - 'main'
+      - '**'
+    tags:
+      - 'v*.*.*'
   release:
     types: [published, edited]
 
@@ -18,17 +13,46 @@ jobs:
   # Build and push the Docker image
   push_to_registry:
     name: Build and push Docker image to Docker Hub
-    if: github.event_name == 'push'
+    if: github.event_name == 'release'
     runs-on: ubuntu-latest
     steps:
-      - name: Build and push image to the Docker Hub
-        uses: docker/build-push-action@v2 # Info: https://github.com/docker/build-push-action/tree/releases/v1#tags
-        # if: ${{ github.ref == 'ref/head/master' }}
+      -
+        name: Checkout
+        uses: actions/checkout@v2
+      -
+        name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v3
         with:
-          file: ./8.1/Dockerfile
+          # list of Docker images to use as base name for tags
+          images: |
+            hellosanta/docker-cypress
+          # generate Docker tags based on the following events/attributes
+          tags: |
+            type=schedule
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
+            type=sha
+      -
+        name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+      -
+        name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      -
+        name: Login to DockerHub
+        uses: docker/login-action@v1
+        if: github.event_name != 'pull_request'
+        with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWD }}
-          repository: ${{ secrets.DOCKER_REPOSITORY }}
-          tag_with_ref: true
-          tag_with_sha: true
-          tags: latest
+      -
+        name: Build and push
+        uses: docker/build-push-action@v2 # Info: https://github.com/docker/build-push-action/tree/releases/v2#tags
+        with:
+          push: ${{ github.event_name != 'pull_request' }}
+          file: ./8.1/Dockerfile
+          tags: ${{ steps.meta.outputs.tags }}
