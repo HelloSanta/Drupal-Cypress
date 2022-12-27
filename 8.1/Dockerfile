@@ -95,6 +95,8 @@ RUN apt-get update && \
 	xauth \
 	xvfb
 
+RUN npm install cypress --save-dev
+
 # Install Chromebrowser
 RUN \
   wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - && \
