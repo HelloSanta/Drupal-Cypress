@@ -78,7 +78,7 @@ RUN apt-get update && apt-get install -y libmemcached-dev zlib1g-dev \
 RUN apt-get install -y rsync default-mysql-client
 
 # Install nodejs && cypress
-RUN curl -s https://deb.nodesource.com/setup_18.x | bash
+RUN curl -s https://deb.nodesource.com/setup_19.x | bash
 RUN apt-get update && \
     apt-get install -y \
 	nodejs \
