@@ -1,4 +1,4 @@
-FROM php:8.1-apache-buster
+FROM php:8.1-apache-bulleye
 
 # install the PHP extensions we need
 RUN set -eux; \
@@ -97,13 +97,14 @@ RUN apt-get update && \
 
 RUN npm install cypress --save-dev
 
-# Install Chromebrowser
-RUN \
-  wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - && \
-  echo "deb http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google.list && \
-  apt-get update && \
-  apt-get install -y dbus-x11 google-chrome-stable && \
-  rm -rf /var/lib/apt/lists/*
+# Install Chrome browser
+RUN apt-get update && \
+    apt-get install -y curl apt-transport-https gnupg && \
+    curl -sSL https://dl.google.com/linux/linux_signing_key.pub | apt-key add - && \
+    echo "deb [arch=amd64] https://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list && \
+    apt-get update && \
+    apt-get install -y dbus-x11 google-chrome-stable && \
+    rm -rf /var/lib/apt/lists/*
 
 # ADD Configuration to the Container
 ADD docker_conf/apache2.conf /etc/apache2/apache2.conf
