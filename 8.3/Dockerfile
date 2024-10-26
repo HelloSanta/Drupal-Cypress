@@ -72,6 +72,7 @@ RUN apt-get update && apt-get install -y libmemcached-dev zlib1g-dev \
 		&& pecl install memcached \
 		&& docker-php-ext-enable memcached
 
+
 # Install mysql-clients && rsync. In order to sync database with the container
 RUN apt-get install -y rsync default-mysql-client
 
@@ -92,6 +93,10 @@ RUN apt-get update && \
 	libxtst6 \
 	xauth \
 	xvfb
+
+# Install Node.js and npm
+RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
+    && apt-get install -y nodejs
 
 RUN npm install cypress --save-dev
 
