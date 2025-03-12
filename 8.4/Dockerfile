@@ -77,10 +77,9 @@ RUN apt-get update && apt-get install -y libmemcached-dev zlib1g-dev \
 RUN apt-get install -y rsync default-mysql-client
 
 # Install nodejs && cypress
-RUN curl -s https://deb.nodesource.com/setup_19.x | bash
+RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
 RUN apt-get update && \
     apt-get install -y \
-	nodejs \
 	wget \
 	libgtk2.0-0 \
 	libgtk-3-0 \
@@ -93,10 +92,6 @@ RUN apt-get update && \
 	libxtst6 \
 	xauth \
 	xvfb
-
-# Install Node.js and npm
-RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
-    && apt-get install -y nodejs
 
 RUN npm install cypress --save-dev
 
