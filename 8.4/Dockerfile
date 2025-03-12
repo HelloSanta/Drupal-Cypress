@@ -80,6 +80,7 @@ RUN apt-get install -y rsync default-mysql-client
 RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash
 RUN apt-get update && \
     apt-get install -y \
+	nodejs \
 	wget \
 	libgtk2.0-0 \
 	libgtk-3-0 \
